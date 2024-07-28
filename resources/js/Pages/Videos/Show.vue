@@ -2,10 +2,11 @@
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Textarea from '@/Components/Textarea.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useForm } from '@inertiajs/vue3'
+import { useForm, router } from '@inertiajs/vue3'
 
 const props = defineProps({
     video: Object
@@ -15,6 +16,13 @@ const form = useForm({
     title: props.video.title,
     description: props.video.description
 })
+
+const deleteVideo = () => {
+    if(window.confirm('Are you sure?')) {
+        router.delete(route('videos.destroy', props.video));
+    }
+};
+
 </script>
 
 <template>
@@ -46,6 +54,7 @@ const form = useForm({
                                 <InputError class="mt-2" :message="form.errors.description" />
                             </div>
 
+                            <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2">
                                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                                     Save video
@@ -53,6 +62,12 @@ const form = useForm({
                                 <div class="text-sm text-gray-600" v-if="form.recentlySuccessful">
                                     Video saved
                                 </div>
+                            </div>
+                            <div>
+                                <DangerButton v-on:click="deleteVideo" type="button">
+                                    Delete Video
+                                </DangerButton>
+                            </div>
                             </div>
                         </form>
                     </div>
